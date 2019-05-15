@@ -26,4 +26,6 @@ Picking up the various programming languages and skills reminds me of the proces
 
 I'm excited to come back here one day and read this snapshot into my thoughts on these early beginnings. In truth, this is just the next chapter of never-ending expedition. Graduation from Flatiron's curriculum will be a springboard forward in my grand journey to constantly be better, do more, solve more problems, help more people, and hopefully make impactful contributions to society.
 
+And who knows, maybe then will be when I pick up where I left off after Spanish 4 in high school.
+
 
