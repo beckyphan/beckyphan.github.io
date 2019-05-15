@@ -19,7 +19,7 @@ My background is in microbiology, immunology, and molecular genetics. I graduate
 Dabbling in web development was initially prompted by my urge to showcase my creativity--photos, crafts, and projects that I wanted to have a little home. HTML and CSS were learning experiences I took on in order to make a little web site. As I learned more through development of my various hobbies and was also introduced to an inkling of the capacity of what web development through work, I decided that I want to be in on the action. So here I am!
 
 ```
-puts "Hello World!"
+"Hello, World!"
 ```
 
 Picking up the various programming languages and skills reminds me of the process of learning Italian and French after being taught Spanish--there's this familiarity despite the differences. What is most important for me to achieve fluency will be continued practice.
