@@ -7,7 +7,8 @@ permalink:  aide-memoire_full_stack_web_development
 
 > i'm wandering into a vibrant world full of new languages,
 > picking up a million new things and developing a wide-range of skills both new & old.
-> here is a space where problem-solvers thrive.
+>
+>  here is a space where problem-solvers thrive.
 
 As I journey into becoming a full stack web developer, I trek onward for many reasons.
 
