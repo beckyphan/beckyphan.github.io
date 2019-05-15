@@ -1,10 +1,9 @@
 ---
 layout: post
-title:      "*aide-memoire Full Stack Web Development*"
-date:       2019-05-15 02:24:56 +0000
+title:      "aide-memoire Full Stack Web Development"
+date:       2019-05-14 22:24:57 -0400
 permalink:  aide-memoire_full_stack_web_development
 ---
-
 
 > i'm wandering into a vibrant world full of new languages,
 > picking up a million new things and developing a wide-range of skills both new & old.
