@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "learning ruby"
-date:       2019-06-15 21:01:10 +0000
+date:       2019-06-15 17:01:10 -0400
 permalink:  learning_ruby
 ---
 
@@ -57,7 +57,7 @@ I understand the purpose and flexibility of keyword arguments, but it's not intu
 i.e.
 Where order of arguments matter:
 ```
-  def initialize(user_name: name, age, location)
+  def initialize(user_name, name, age, location)
     @user_name = user_name
     @name = name
     @location = location
