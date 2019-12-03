@@ -1,0 +1,339 @@
+---
+layout: post
+title:      "rails project: picture palace"
+date:       2019-12-03 00:26:58 +0000
+permalink:  rails_project_picture_palace
+---
+
+
+> ruby on rails has everything you need-
+> it is organized programming logic patterned as MVC!
+
+For my project, my goal is to create a Rails application that allows for social networking around movie-viewing.
+
+Users should have the capability to create an account, and mark movies as seen if they have seen those movies.
+For movies that users have seen, they can add their review + rating (0-5 stars).
+
+Users can also create events around movies. These events will have a user as a host, and also have users as attendees.
+In these events, users can add comments to communicate with other users attending the event.
+
+Movies will have its own attributes, as well as be associated with events and ratings, as well as users through those events & ratings. 
+
+Additionally, there are a plethora of helpful gems that have fleshed out capabilities that were recommended for use with our rails gem, including:
+```
+gem 'bootstrap-sass', '>= 3.4.1'  # styling extension of CSS3
+gem 'bootstrap', '~> 4.3.1'       # most popular HTML, CSS, and JS framework
+gem 'jquery-rails'                # javaScript library
+gem 'devise'                      # registration/mailing/login, etc
+gem 'cancancan'                   # user authorizations
+gem 'simple_form'                 # form builder + compatibility with devise
+gem 'rspec-rails'                 # for test building
+gem 'omniauth-google-oauth2'      # for omniauth with google
+```
+
+The associations for this project were confusing for me, because I was going to have objects that had many of another object, but in two separate ways. I tried to wrap my head around this and read up more about activerecord associations via [the odin project](https://www.theodinproject.com/courses/ruby-on-rails/lessons/active-record-associations).
+
+Mapping out the associations is incredibly helpful for me. It helps me see how the models are related, and prompts me to ask all the appropriate how's. For example, if a user has_many hosted events, but a user also has_many attended events--how does it know which is which? Which prompts me to go to the events model, where an event belongs to a host, but it doesn't contain a list of attendees. For that, I'll need to make a join table that lists the guest + the event so the info can be queried.
+
+It was a bit of trial and error to get all the associations working the way I intended, and even then, I think there may be use of scopes that I'm unfamiliar with that can clean things up a bit. In the end, my models looked like this:
+
+### User 
+```
+  has_many :hosted_events, foreign_key: :host_id, class_name: "Event"
+  has_many :guestlists, foreign_key: :attendee_id
+  has_many :attended_events, through: :guestlists, source: :event, class_name: "Event"
+
+  has_many :movie_reviews, foreign_key: :reviewer_id, class_name: "Review"
+  has_many :reviewed_movies, through: :movie_reviews, source: :movie, class_name: "Movie"
+
+  has_many :to_watches
+  has_many :movies_in_to_watches, through: :to_watches, source: :movie, class_name: "Movie"
+
+  has_many :comments
+```
+
+```
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "username"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+```
+
+### Movie
+```
+  has_many :reviews, dependent: :destroy
+  has_many :events, dependent: :destroy
+  has_many :reviewers, through: :reviews
+```
+
+```
+  create_table "movies", force: :cascade do |t|
+    t.string "name"
+    t.string "genre"
+    t.string "image_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+```
+
+### Event 
+```
+  belongs_to :host, class_name: "User"
+  has_many :guestlists, foreign_key: :event_id, dependent: :destroy
+  has_many :attendees, through: :guestlists, source: :attendee, dependent: :destroy
+
+  has_many :comments, dependent: :destroy
+
+  belongs_to :movie
+
+  validates :host_id, uniqueness: { scope: :datetime, message: "you are already hosting another event at this date/time" }
+```
+
+```
+  create_table "events", force: :cascade do |t|
+    t.string "title"
+    t.datetime "datetime"
+    t.bigint "host_id", null: false
+    t.bigint "movie_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "location"
+    t.index ["host_id"], name: "index_events_on_host_id"
+    t.index ["movie_id"], name: "index_events_on_movie_id"
+  end
+```
+
+### Comment
+```
+  belongs_to :user
+  belongs_to :event
+```
+
+```
+create_table "comments", force: :cascade do |t|
+    t.text "description"
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["event_id"], name: "index_comments_on_event_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+```
+
+### Guestlist
+```
+  belongs_to :attendee, class_name: "User"
+  belongs_to :event
+```
+
+```
+  create_table "guestlists", force: :cascade do |t|
+    t.bigint "attendee_id", null: false
+    t.bigint "event_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["attendee_id"], name: "index_guestlists_on_attendee_id"
+    t.index ["event_id"], name: "index_guestlists_on_event_id"
+  end
+```
+
+### Review 
+```
+  belongs_to :reviewer, class_name: "User"
+  belongs_to :movie
+
+  validates :rating, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 5}
+```
+
+```
+  create_table "reviews", force: :cascade do |t|
+    t.integer "rating"
+    t.bigint "reviewer_id", null: false
+    t.bigint "movie_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "title"
+    t.text "description"
+    t.index ["movie_id"], name: "index_reviews_on_movie_id"
+    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
+  end
+```
+
+### ToWatch
+```
+  belongs_to :movie
+  belongs_to :user
+
+  scope :watched, -> { where(watched: true) }
+  scope :tosee, -> { where(watched: false) }
+```
+
+```
+  create_table "to_watches", force: :cascade do |t|
+    t.boolean "watched"
+    t.bigint "movie_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["movie_id"], name: "index_to_watches_on_movie_id"
+    t.index ["user_id"], name: "index_to_watches_on_user_id"
+  end
+```
+
+In using devise, a lot of the user sign_up and log_in code are built in with the gem. In order to add a :username field, it was necessary to add the field in as a new migration to add_column. I updated the registration form in users/registration/new to include the :username field so that it would take up the field as a param. However, I was unable to figure out how to properly have the registration include the username.
+
+I found a functioning workaround through updating routes.
+```
+devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }
+```
+registrations allowed for it to specify the controller being used for sign_up, and the omniauth_callbacks is for use with omniauth.
+
+Then, I updated the sanitized params in the registrations controller to permit :username and added a @user.update into the user#create method in devise/registration to take in the :username.
+
+There are a few specific views I want a user to be able to view, including:
+- events#index
+- movies#index
+- user#show = dashboard; to prevent users from viewing other users' dashboards, instead of pulling from the params[:id], it is really calling upon the current_user method to pull data
+
+Additionally, I've used control flow in the views to only allow users to edit events if they are the host of the event, and to only show delete buttons to remove themselves from attending events. Users are also not allowed to post reviewed unless they indicate that they have seent the movies.
+
+The dependency: :destroy added to the various models ensure that if an event is deleted, all its related events and reviews are also deleted. Ideally, I also intended for users to be able to comment on events that they are attending, but if they choose to no longer attend, upon deleting themselves from the guestlist, all their comments on the events page will also be deleted. However, since the guestlist is a pure join_table, I'm unsure how the dependency works here, so I have a functional workaround in the guestlists_controller to check through and destory all comments by the user on the event on which they are no longer attending.
+
+Using scopes on the ToWatch model was a very useful tool to quickly tease out the watched: true's vs the watched: false's
+I am using it in the users#show controller to count up the movies that the user has marked as want to see vs has seen to provide a little blurb on the user's movie stats.
+
+## Routes
+```
+  root to: "movies#home" 
+#                                  root GET      /                                                                                        movies#home
+#necessary when using devise
+			 
+  resources :guestlists
+#                            guestlists GET      /guestlists(.:format)                                                                    guestlists#index
+#                                       POST     /guestlists(.:format)                                                                    guestlists#create
+#                         new_guestlist GET      /guestlists/new(.:format)                                                                guestlists#new
+#                        edit_guestlist GET      /guestlists/:id/edit(.:format)                                                           guestlists#edit
+#                             guestlist GET      /guestlists/:id(.:format)                                                                guestlists#show
+#                                       PATCH    /guestlists/:id(.:format)                                                                guestlists#update
+#                                       PUT      /guestlists/:id(.:format)                                                                guestlists#update
+#                                       DELETE   /guestlists/:id(.:format)                                                                guestlists#destroy
+ 
+ resources :comments
+#                              comments GET      /comments(.:format)                                                                      comments#index
+#                                       POST     /comments(.:format)                                                                      comments#create
+#                           new_comment GET      /comments/new(.:format)                                                                  comments#new
+#                          edit_comment GET      /comments/:id/edit(.:format)                                                             comments#edit
+#                               comment GET      /comments/:id(.:format)                                                                  comments#show
+#                                       PATCH    /comments/:id(.:format)                                                                  comments#update
+#                                       PUT      /comments/:id(.:format)                                                                  comments#update
+#                                       DELETE   /comments/:id(.:format)                                                                  comments#destroy
+
+  resources :events
+#                                events GET      /events(.:format)                                                                        events#index
+#                            edit_event GET      /events/:id/edit(.:format)                                                               events#edit
+#                                 event GET      /events/:id(.:format)                                                                    events#show
+#                                       PATCH    /events/:id(.:format)                                                                    events#update
+#                                       PUT      /events/:id(.:format)                                                                    events#update
+#                                       DELETE   /events/:id(.:format)                                                                    events#destroy
+
+  resources :movies
+#                                movies GET      /movies(.:format)                                                                        movies#index
+#                                       POST     /movies(.:format)                                                                        movies#create
+#                             new_movie GET      /movies/new(.:format)                                                                    movies#new
+#                            edit_movie GET      /movies/:id/edit(.:format)                                                               movies#edit
+#                                 movie GET      /movies/:id(.:format)                                                                    movies#show
+#                                       PATCH    /movies/:id(.:format)                                                                    movies#update
+#                                       PUT      /movies/:id(.:format)                                                                    movies#update
+#                                       DELETE   /movies/:id(.:format)                                                                    movies#destroy
+	
+  resources :reviews
+#                               reviews GET      /reviews(.:format)                                                                       reviews#index
+#                                       POST     /reviews(.:format)                                                                       reviews#create
+#                            new_review GET      /reviews/new(.:format)                                                                   reviews#new
+#                           edit_review GET      /reviews/:id/edit(.:format)                                                              reviews#edit
+#                                review GET      /reviews/:id(.:format)                                                                   reviews#show
+#                                       PATCH    /reviews/:id(.:format)                                                                   reviews#update
+#                                       PUT      /reviews/:id(.:format)                                                                   reviews#update
+#                                       DELETE   /reviews/:id(.:format)                                                                   reviews#destroy
+	
+  resources :to_watches, only: [:create, :update]
+#                            to_watches POST     /to_watches(.:format)                                                                    to_watches#create
+#                              to_watch PATCH    /to_watches/:id(.:format)                                                                to_watches#update
+#                                       PUT      /to_watches/:id(.:format)                                                                to_watches#update
+
+  resources :users, only: [:show]
+#                                  user GET      /users/:id(.:format)                                                                     users#show
+
+  resources :users, only: [:show] do
+    resources :events, only: [:show]
+  end
+#                            user_event GET      /users/:user_id/events/:id(.:format)                                                     events#show
+#                                       GET      /users/:id(.:format)                                                                     users#show
+
+  resources :users, only: [:show] do
+    resources :reviews, only: [:show]
+  end
+#                           user_review GET      /users/:user_id/reviews/:id(.:format)                                                    reviews#show
+#                                       GET      /users/:id(.:format)                                                                     users#show
+
+  resources :users, only: [:show] do
+    resources :to_watches, only: [:show]
+  end
+#                         user_to_watch GET      /users/:user_id/to_watches/:id(.:format)                                                 to_watches#show
+#                                       GET      /users/:id(.:format)                                                                     users#show
+
+  resources :movies, only: [:show] do
+    resources :reviews, only: [:new]
+  end
+#                      new_movie_review GET      /movies/:movie_id/reviews/new(.:format)                                                  reviews#new
+#                                       GET      /movies/:id(.:format)                                                                    movies#show
+
+  resources :movies, only: [:show] do
+    resources :events, only: [:new]
+  end
+#                       new_movie_event GET      /movies/:movie_id/events/new(.:format)                                                   events#new
+#                                       GET      /movies/:id(.:format)                                                                    movies#show
+
+  devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }
+#                      new_user_session GET      /users/sign_in(.:format)                                                                 devise/sessions#new
+#                          user_session POST     /users/sign_in(.:format)                                                                 devise/sessions#create
+#                  destroy_user_session DELETE   /users/sign_out(.:format)                                                                devise/sessions#destroy
+# user_google_oauth2_omniauth_authorize GET|POST /users/auth/google_oauth2(.:format)                                                      users/omniauth_callbacks#passthru
+#  user_google_oauth2_omniauth_callback GET|POST /users/auth/google_oauth2/callback(.:format)                                             users/omniauth_callbacks#google_oauth2
+#                     new_user_password GET      /users/password/new(.:format)                                                            devise/passwords#new
+#                    edit_user_password GET      /users/password/edit(.:format)                                                           devise/passwords#edit
+#                         user_password PATCH    /users/password(.:format)                                                                devise/passwords#update
+#                                       PUT      /users/password(.:format)                                                                devise/passwords#update
+#                                       POST     /users/password(.:format)                                                                devise/passwords#create
+#              cancel_user_registration GET      /users/cancel(.:format)                                                                  devise/registrations#cancel
+#                 new_user_registration GET      /users/sign_up(.:format)                                                                 devise/registrations#new
+#                edit_user_registration GET      /users/edit(.:format)                                                                    devise/registrations#edit
+#                     user_registration PATCH    /users(.:format)                                                                         devise/registrations#update
+#                                       PUT      /users(.:format)                                                                         devise/registrations#update
+#                                       DELETE   /users(.:format)                                                                         devise/registrations#destroy
+#                                       POST     /users(.:format)                                                                         devise/registrations#create
+```
+
+As seen, devise has a lot of built-in routes (and there are more as well with mailers, etc not shown here.
+The updates I made included adding the :users scope. NOTE: need to update config/initializers/devise.rb file to allow the following:
+```
+config.scoped_views = true
+ config.default_scope = :user
+```
+
+There are still a few things I am working to build out, including the user dashboard.
+Additonally, I want to add a search bar/filtering tool to be able to highlight specific events that the user can specify e.g. events for specific movies, events that are in the future vs events that have already occured.
+
+
+
+
+
