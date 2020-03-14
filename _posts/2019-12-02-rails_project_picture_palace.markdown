@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "rails project: picture palace"
-date:       2019-12-03 00:26:58 +0000
+date:       2019-12-02 19:26:59 -0500
 permalink:  rails_project_picture_palace
 ---
 
@@ -330,10 +330,240 @@ config.scoped_views = true
  config.default_scope = :user
 ```
 
-There are still a few things I am working to build out, including the user dashboard.
-Additonally, I want to add a search bar/filtering tool to be able to highlight specific events that the user can specify e.g. events for specific movies, events that are in the future vs events that have already occured.
+There are still a few things I am working to build out, including the user dashboard & routing + add a search bar/filtering tool to be able to highlight specific events that the user can specify e.g. events for specific movies, events that are in the future vs events that have already occurred.
+~ circa Dec 2019
 
 
+# UPDATE: MAR 2020
+I took a really long hiatus between finishing up the rails project above & jumping in (between year-end holidays, winter break vacation, relocating from NYC to SoCal & allllll of the things that come along with making a cross-country move and establishing new residency, new job, new health networks, etc.), not to mention wedding planning. Whew.
+
+One huge issue I was having when I last left off with using the devise gem is that I don't fully comprehend all the magic it contains. In trying to get my project to login with new attributes from the get-go or routing to a different page than default, it involves adjusting code that is pre-set and easy to use, but when it breaks, I cannot find where it goes wrong. When logged in and continuing to build out code, everything works that I intended to work... however, upon registration, I cannot determine the source of the break because I lack comprehensive knowledge of the devise tool.
+
+With that said, I'm going to save what I have from this project and jump back into it a different time.
+
+I am going to restart my project without using the devise gem, 1) to do a much needed refresher on my rails knowledge and 2) to intentionally create the login/logout processes from scratch to avoid the issues I'm running into with customization with the devise gem.
+
+So here goes:
+
+I am still creating a social application around movie viewing.
+
+### User
+A user will be able to register for an account & login with a password.
+
+Any user will be able to create movies, 
+a user can create events for movies, 
+a user can comment on the events for movies, 
+and a user can create reviews for movies.
+
+### Movie
+A movie can have multiple events,
+and it can have many reviews.
+
+### Review 
+A review is written by a user for a movie
+
+### Comment 
+A comment is written by user for an event of a movie
+
+### Guestlist
+A guestlist is the join table between a user who is attending an event and an event.
+
+## Aliasing
+I have a lot of trouble understanding how to properly alias in rails, but in my model, there are going to be some items that have a dual association so I have to rename the attribute in order to approrpriately pull the correct info.
+
+Each user can create multiple events, aka they can host multiple events.
+Each user can also attend multiple events, aka they are attendees of multiple events.
+
+Has_many events won't be enough to differentiate the two, so I have used aliasing.
+
+In this way, my models & migrations are as follows for the specific attributes:
+
+```
+class User < ApplicationRecord
+  has_many :events, foreign_key: 'host_id' 
+	# event.host will know that host == user and pull the corresponding user object
+  # foreign_key is referencing what column to look for in the Event table
+	
+	has_many :guestlists
+  has_many :events, through: :guestlists, foreign_key: 'attendee_id' 
+	# event.attendee will know that attendee == user and pull the corresponding user object
+  # foreign_key is referencing what column to look for in the Guestlist table
+
+```
+
+```
+class Event < ApplicationRecord
+ 
+  belongs_to :host, class_name: "User"
+	# event.host will pull the host (aka user) who created the event
+
+  has_many :guestlists
+  has_many :attendees, through: :guestlists, foreign_key: "attendee_id"
+	# event.attendees will pull the attendees (aka users) who are attending the event
+  # foreign_key is referencing what column to look for in the Guestlist table
+end
+
+```
+
+```
+class Guestlist < ApplicationRecord
+  belongs_to :event
+  belongs_to :attendee, class_name: "User"
+	# user.events will pull events that the attendee (aka user) is attending
+end
+```
+
+To create working migrations, I ran into errors when trying to use the belongs_to because there are additional checks rails seems to be doing to ensure referential integrity, so the way to go was to explicity note the foreign keys in my migrations.
+
+There is nothing special with the users able/users migration, because the aliasing has really occurred with its associated objects, i.e.  the users table will not need any special columns.
+
+Rather, the affected tables are:
+Events table, where a user is referenced to as a host - (host_id)
+Guestlist (join table), where a user is referenced to as an attendee - (attendee_id)
+
+```
+MIGRATION
+class CreateEvents < ActiveRecord::Migration[6.0]
+  def change
+    create_table :events do |t|
+      t.belongs_to :movie, null: false, foreign_key: true
+      t.integer :host_id, null: false
+    end
+  end
+end
 
 
+SCHEMA
+create_table "events", force: :cascade do |t|
+    t.bigint "movie_id", null: false
+    t.integer "host_id", null: false
+    t.index ["movie_id"], name: "index_events_on_movie_id"
+  end
+```
 
+
+```
+MIGRATION
+class CreateGuestlists < ActiveRecord::Migration[6.0]
+  def change
+    create_table :guestlists do |t|
+      t.belongs_to :event, null: false, foreign_key: true
+      t.integer :attendee_id, null: false, foreign_key: true
+    end
+  end
+end
+
+SCHEMA
+  create_table "guestlists", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.integer "attendee_id", null: false
+    t.index ["event_id"], name: "index_guestlists_on_event_id"
+  end
+
+```
+
+## Scopes
+Reading about scopes, documentation notes that it really just is 'syntactic sugar'  so when I got confused by its syntax, I just started off writing it as a class method, and then copying & pasting the method body into the scope template.
+
+Additionally, I had to wrap my head around what sql queries I was planning to use.
+
+For example, I want to know which event has the most attendees.
+Essentially, rails would have to go through each event from Event.all and let me know how many attendees were in each; then it would need to order it by the attendee counts and return the top value.
+
+In my head, it made sense to try to do Event.attendees, and call a count on that... 
+but the class Event does not have attendees... an instance of an event has attendees. 
+
+So in reality, I need to do a scope on my JOIN TABLE for Events & Attendees, which is my Guestlist table, whose attributes are attendee_id and event_id.
+
+To get my guest counts, I GROUP the guestlist by :event_id and then call COUNT
+
+```
+class Guestlist < ApplicationRecord
+  scope :event_guest_counts, -> { self.group(:event_id).count }
+```
+
+The SQL query would look like:
+```
+ SELECT COUNT(*) AS count_all, "guestlists"."event_id" 
+ AS guestlists_event_id 
+ FROM "guestlists" 
+ GROUP BY "guestlists"."event_id"
+ 
+ => {1=>1, 2=>5} 
+```
+
+It returns me the :event_id and its count in a hash for each event I have. 
+i.e. For event with event_id: 1, I have 1 attendee & for event with event_id: 2, I have 5 attendees
+
+Recall that Guestlist.event_guest_counts => {1=>1, 2=>5}  with key:value pairs being :event_id and then its count.
+My order_events_by_popularity scope is a scope that orders the event_id listings by the attendee counts.
+
+```
+  scope :order_events_by_popularity, -> { self.group(:event_id).order("count(*)").count }
+```
+
+To make it easy to call upon, I created a class method to look up the event and pull out that object.
+
+```
+class Guestlist < ApplicationRecord
+  def self.most_popular_event
+    event_id = self.order_events_by_popularity.first.first
+    @event = Event.find_by(id: event_id)
+  end
+end
+```
+
+## Nested Resources
+In creating a movie review or in posting a comment on an event, a user really only has that action upon seeing a movie or viewing an event. 
+
+In other words, when viewing movie reviews, I don't intend for users to be able to see a page with all the reviews ever written for all the movies in the database; it would always be associated with a movie.
+
+First, I created my nested resources in my routes file.
+
+```
+  resources :movies do
+    resources :reviews
+  end
+```
+	
+To make things very user-friendly, I created a review form on the movie#show page.
+
+```
+views/movie#show
+
+<%= form_with model: @review, url: movie_reviews_path(@movie, @review), class: "review-form" do |f| %>
+      <%= f.label :review_title %>
+      <%= f.text_field :review_title><br>
+      <%= f.label :rating %>
+      <%= f.select :rating, [1, 2, 3, 4, 5] %><br>
+      <%= f.text_area :description %>
+      <center>
+      <%= f.submit "Add My Review"%>
+      </center>
+    <% end %>
+	```
+	
+Note the path for this form is movie_reviews_path(@movie, @review), where @movie is the current movie whose show page we are on which is noted in the movie#show controller, and @review = Review.new.
+
+In the Review controller:
+```
+  def create
+     @review = Review.new(review_params)
+     @review.movie_id = params[:movie_id]
+  end
+	
+	def review_params
+    params.require(:review).permit(:review_title, :rating, :description)
+  end
+```
+
+Params sent look like this:
+<ActionController::Parameters {"authenticity_token"=>"XXX", "review"=>{"review_title"=>"New Joker Review", "rating"=>"4", "description"=>"Great Movie."}, "commit"=>"Add My Review", "controller"=>"reviews", "action"=>"create", "movie_id"=>"1"} permitted: false>
+
+All the form elements are within the REVIEW hash, while the movie_id param which is taken from the movie_path url (/movies/:id(.:format)) is passed along separately, as a result of having a nested resource.
+
+## OmniAuth
+to be continued!
+
+
+	
