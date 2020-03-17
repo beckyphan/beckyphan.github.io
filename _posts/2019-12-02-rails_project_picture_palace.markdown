@@ -137,6 +137,41 @@ SCHEMA
 
 ```
 
+
+Another example of aliasing to use a preferred name for associations related via a join table:
+Review belongs_to a movie & belongs_to a user, but let's call the user a 'viewer'
+```Review belongs_to :viewer, class_name: "User", foreign_key: "user_id"```
+
+In the Movie model, a movie has_many reviews, but a movie also has_many users/viewers from its reviews. 
+*NOTE: movies do not belongto a user in my project, thus this is a hasmany, through: association.*
+To let rails know where to look was a series of trial & error for me.
+```Movie has_many :reviews
+Movie has_many :viewers, through: :reviews, source: :viewer, foreign_key: 'user_id'```
+The following SQL query is returned when you run movie_object.viewers (equivalent of movie_object.users)
+
+```SELECT "users".* FROM "users" INNER JOIN "reviews" ON "users"."id" = "reviews"."user_id" WHERE "reviews"."movie_id" = $1 LIMIT $2 ```
+
+In short, what could have been as simple as:
+``` Review
+belongs_to :user
+
+Movie
+has_many :reviews
+has_many :users, through: :reviews
+```
+
+has become
+
+```Review
+belongs_to :viewer, class_name: "User", foreign_key: "user_id"
+
+Movie
+has_many :reviews 
+has_many :viewers, through: reviews, source: :viewer, foreign_key: "user_id"
+```
+
+so that instead of typing movie_object.users to see all the users who reviewed the movie, I am going to refer to the users as "viewers." i.e. to see all the users who I know have watched the movie because they have reviewed it, I can run movie_object.viewers. More work on the coding side, but more intuitive on the user side.
+
 ## Scopes
 Reading about scopes, documentation notes that it really just is 'syntactic sugar'  so when I got confused by its syntax, I just started off writing it as a class method, and then copying & pasting the method body into the scope template.
 
