@@ -238,6 +238,21 @@ Params sent look like this:
 All the form elements are within the REVIEW hash, while the movie_id param which is taken from the movie_path url (/movies/:id(.:format)) is passed along separately, as a result of having a nested resource.
 
 ## Using Partials
+Bits of copy & pasted code for my views were able to be thrown into a partial.
+Per convention, I named the partial in the view folder for which it would be used, preceded by an underscore. When calling upon the view to render, the underscore is omitted.  ex: ```  <%= render "event_form" %>```
+
+When using partials for the rendering of my nested form, I used the format in which I needed to specify the local variable being passed in because the post path for my URL's differed, whereas other forms only differed in the @movie object being passed in, etc.
+```
+<%= form_with model: @review, url: **new_movie_review_path**(@review.movie), class: "review-form" do |form| %>
+    <%= render partial: "movie_review_form", locals: { f: form }  %>
+  <% end %>
+	```
+	
+	```
+	<%= form_with model: @review, url: **movie_review_path**(@review), class: "review-form" do |form| %>
+  <%= render partial: "movie_review_form", locals: { f: form } %>
+<% end %>
+```
 
 
 ## OmniAuth
@@ -275,6 +290,7 @@ end
 
 
 # Pic-Pal Blog Post
+## Pre-2020 Project Re-do
 
 
 For my project, my goal is to create a Rails application that allows for social networking around movie-viewing.
