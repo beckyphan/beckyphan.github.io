@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "javascript project: newtrition"
-date:       2020-08-31 04:02:48 +0000
+date:       2020-08-31 00:02:49 -0400
 permalink:  javascript_project_newtrition
 ---
 
@@ -75,11 +75,15 @@ named functions are declared with a name and are not instantly invoked.
 To instantly invoke named functions, they must be written as an expression and called (extra pair of parentheses following).
 ```(function name() {})()```
 
+Arrow functions are a feature introduced in ES6, in which the word function need not be written, and the return keyword + curly brackets can be omitted if it is in a single line. Arrow functions lack "this" and are not hoisted (aka must be defined before they are used).
+
+
 
 #### hoisting, context, scope, closures
 For the most part, most of my javascript is within the 'DOMContentLoaded' event listener. Because variables are able to be seen within the scope of their function, if I needed to use the variable for another function I would pass it through as an argument so the new function would be able to access it. Variables that had more broad use I could declare as a const and place outside of the scope of any singular function. 
 
 #### ES6 syntax
+E6 allows for new features in javascript, such as the use of let and const to declare variables, the introduction of arrow functions, classes, default parameters, and some other functions.
 
 #### js eventing
 JS event listeners are straight-forward.
@@ -115,6 +119,7 @@ Generally, with working fetch requests, I'll be able to accomplish what I need i
 
 
 #### rails as an api, rendering json
+As opposed to sending out data viewable through our ERB, we are returning serialized json data and rendering that data into readable data on the SPA. 
 
 #### js object orientation, class, constructors, inheritance
 For my project, my data existed on the backend with rails, and instances of these objects were simply created using a class constructor. There was no need for any use of inheritance to extend features or 
