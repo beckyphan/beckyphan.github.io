@@ -62,7 +62,7 @@ Variables that may change are declared with let.
 We learned not use var, which is a global variable, to avoid having global variables that may cause conflicts.
 
 #### data structures
-There are 6+1 primitive values in javascript: bigInt, boolean, undefined, number, string, symbol, and null
+There are 6+1 primitive values in javascript: bigInt, boolean, undefined, number, string, symbol, and null. The ways js organizes data is generally as objects and functions. 
 
 #### functions, arrow functions
 Functions are a first-class objects and treated like any other variable in javascript, with the distinguishing factor being that they are able to be called.
