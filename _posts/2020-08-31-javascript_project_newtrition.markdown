@@ -56,15 +56,15 @@ I had to wrap my mind around building vertically, because my mind gravitates tow
 Detailing the steps helped with this, but to be able to test out the associations, I did have to ensure all the models were created at the very least and then build upon it. It wasn't intuitive to do a complete vertical build as I wouldn't be able to test out the features without its appropriate associations. I did a poor job of building vertically, but with additional planning for future projects this can be improved.
 
 ## learning goals & notes
-#### variables: let, const
+### variables: let, const
 For the most part, in my project I used const for pathnames and items that do not change. 
 Variables that may change are declared with let. 
 We learned not use var, which is a global variable, to avoid having global variables that may cause conflicts.
 
-#### data structures
+### data structures
 There are 6+1 primitive values in javascript: bigInt, boolean, undefined, number, string, symbol, and null. The ways js organizes data is generally as objects and functions. 
 
-#### functions, arrow functions
+### functions, arrow functions
 Functions are a first-class objects and treated like any other variable in javascript, with the distinguishing factor being that they are able to be called.
 
 anonymous functions don't have a name and can be an instantly invoked function expression that runs immediately after it is defined. They can also be assigned to a variable to store function's return value is stored.
@@ -79,19 +79,19 @@ Arrow functions are a feature introduced in ES6, in which the word function need
 
 
 
-#### hoisting, context, scope, closures
+### hoisting, context, scope, closures
 For the most part, most of my javascript is within the 'DOMContentLoaded' event listener. Because variables are able to be seen within the scope of their function, if I needed to use the variable for another function I would pass it through as an argument so the new function would be able to access it. Variables that had more broad use I could declare as a const and place outside of the scope of any singular function. 
 
-#### ES6 syntax
+### ES6 syntax
 E6 allows for new features in javascript, such as the use of let and const to declare variables, the introduction of arrow functions, classes, default parameters, and some other functions.
 
-#### js eventing
+### js eventing
 JS event listeners are straight-forward.
 ```document.addEventListener('DOMContentLoaded', () => { }```
 I want to first make sure the content is loaded so we can start listening to clicks or submits done on the loaded content.
 From there, it's a matter of making sure I'm adding the event listener on the correct element(s), and listening for the right event. The body will consist of the work to be done, whether that be various functions or different actions, etc.
 
-#### fetch requests
+### fetch requests
 Fetch requests for pulling info are in a simple enough format.
 ``` 
 fetch(loginPath)
@@ -115,12 +115,12 @@ In addition to providing the path to which the data will post, I need to provide
 The metadata can be encapsulated in an object and passed in as a variable, as well as the body data.
 
 Generally, with working fetch requests, I'll be able to accomplish what I need in that 2nd .then(). 
-.catch() is a way I can catch silent errors and handle unexpected events/do something with that error message.
+.catch() is a way I can catch silent errors and handle unexpected events/do something with that error message. Adding a .ca
 
 
-#### rails as an api, rendering json
+### rails as an api, rendering json
 As opposed to sending out data viewable through our ERB, we are returning serialized json data and rendering that data into readable data on the SPA. 
 
-#### js object orientation, class, constructors, inheritance
-For my project, my data existed on the backend with rails, and instances of these objects were simply created using a class constructor. There was no need for any use of inheritance to extend features or 
+### js object orientation, class, constructors, inheritance
+For my project, my data existed on the backend with rails, and instances of these objects were simply created using a class constructor. There was no need for any use of inheritance to extend any features.
 
