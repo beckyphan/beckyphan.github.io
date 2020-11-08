@@ -1,13 +1,12 @@
 ---
 layout: post
 title:      "react notes"
-date:       2020-11-08 23:08:13 +0000
+date:       2020-11-08 18:08:14 -0500
 permalink:  react_notes
 ---
 
-
-## learning objectives and notes
-### background
+learning objectives and notes
+## background
 * react framework is built out of Javascript
 * JSX (extension of JavaScript with a specific syntax) is separated out into reusable, indpendent components, and when combined, form a web application
 
@@ -15,7 +14,7 @@ React has a virtual DOM, declarative writing structure, a transpiler (Babel), a 
 
 React apps require a server to the app to run on, accomplished by `npm start`
 
-#### react components
+## react components
 components are independent, reusable pieces of code that can be thought of as little packages or JavaScript functions, accepting "props" (properties) and return React elements.
 
 React components can be used as dynamic templates, and passed in "**props**" from parent components to children components to use. Of note, calling a component within itself can result in endless recursion if there are no break conditions.
@@ -33,7 +32,7 @@ while props are limited due to needing parent component to send it props/new pro
 > to use states, use a constructor() to set the initial ```this.state = {}``` because constructor() runs first; and then create other methods that function to set the new state via ```this.setState({})```. setState() is asynchronous. The magic of .setState({}) is that it is a function available to all React components and informs that it should re-render. To update a state that references itself, the function previousState can be used such that ```this.setState(previousState => { return { attribute: previousState.attribute + action } })```
 
 
-#### accessing components
+## accessing components
 Using children components in the top-most App component requires importing them into the App.js file, as well as exporting them in each respective component.
 
 ```export default class XComponent``` would import the entire component, so in App.js you can import ```import XComponent from [fileLocation/fileName].js```
@@ -51,26 +50,41 @@ named exports allow export of several specific things at once; Modules can be re
 
 callbacks are used to effect change outside of the context of a parent.
 
-#### JSX
+## JSX
 Functions can be called and must return a single JSX element or multiple JSX elements in an array.
 
 Any valid Javascript expression can be placed within curly braces and used or embedded in an attribute.
 
-#### Events
+## Events
 HTML events are utilized in React by wrapping them in a "SyntheticEvent"
 the action is wrapped inside a function (usually an arrow function to avoid creating a new scope with different value of ```this```), and the event handler is attached to the element e.g. ```onClick={this.functionName}```
 
 Event pooling is a technique that sends the event data object to the callback so that the object is cleaned up for later use. this prevents asynchronous access to data, unless the target is saved into a variable or the event is made persistent via event.persist()
 
-#### Controlled vs Uncontrolled Components
+## Controlled vs Uncontrolled Components
 Controlled vs uncontrolled components refer to the ways we can implent forms in react.
 With controlled components, form data is handled by a React component so that form elements (such as inputs) are constantly saved in the react state to serve as the “single source of truth.
 With uncontrolled components, the form sort of has its own state, and data is handled via the DOM.
 
-#### React Component Lifecycles
+## React Component Lifecycles
+react component propertiers: props & states
+props come from parent components, while state is internal to component
+the component lifecycles are:
+* creation
+creation of a component mounts it onto the DOM (`static getDerivedStateFromProps` and `componentDidMount`)
+after the `constructor` is called, `static getDerivedStateFromProps` is called, then `render` method is called, then `componentDidMount` is called
+
+* updating
+`static getDerivedStateFromProps()` is invoked when updating a component
+`shouldComponentUpdate` is invoked prior to re-rendering (this is the stage to compare old/new props to prevent unnecessary re-renders)
+then `render` method is called
+just prior to updating, `getSnapshotBeforeUpdate` is called which can be used in final update lifecycle mthod `componentDidUpdate`
+
+* deletion
+at unmounting state, component is deleted and cleared out via `componentWillUnmount`
 
 
-#### React Containers
+## React Containers
 Presentational components or "simple components" are components that have no state and are also not affected by state. They simple render themselves or use props data. Uncoupling the logic piece from the presentation layer allows reuse of the presentation container to build a difference piece of UI with the same code by importing and wrapping it.
 
 
