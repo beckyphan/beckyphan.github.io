@@ -224,7 +224,16 @@ The last piece I wanted to do is keep a user logged in. As the user's info is he
 
 To do this, I used Redux Persist and updated my index.js file accordingly.
 
-Future steps: Some ideas I want to implement in future versions of my project would be to display a calendar of days, rather than just created days. It would be visually appealing, as well as help with user experience in understanding which days contain data, etc.
+Future steps/stretch goals: 
+* I want to implement in future versions of my project would be to display a calendar of days, rather than just created days. It would be visually appealing, as well as help with user experience in understanding which days contain data, etc. 
+* I also want to be able to implement file uploads so users can upload pictures of their bebes directly.
+
+![](https://res.cloudinary.com/bphan/image/upload/v1610919651/Slide1_kwhdjs.jpg)
+![](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide2_eenlzp.jpg)
+![](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide3_reypsz.jpg)
+![](https://res.cloudinary.com/bphan/image/upload/v1610919651/Slide4_u2bqph.jpg)
+![](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide5_ocysxp.jpg)
+
 
 A walkthough of my project will be posted here at some point! Stay tuned!
 
