@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "react redux portfolio project"
-date:       2021-01-17 00:09:20 +0000
+date:       2021-01-16 19:09:21 -0500
 permalink:  react_redux_portfolio_project
 ---
 
@@ -220,7 +220,11 @@ In my project, when a user logs in or registers, the user's info will be sent to
 
 When a user is logged in, they'll be redirected to their Bebes page where they can see existing Bebes or add a new one. If they click into a Bebe, they'll be able to add days and add tracking data to the days, etc.
 
-The other piece I need to do is keep a user logged in. As the user's info is held in the redux store and I am checking into the store to detect a user to authorize view of a page, the page will be inaccessible or will not load accurate if there is a refresh causing the store to disappear. I could use localStorage to hold a token with the user's information, however, the way my components are currently set up to pull information to display be accessing the store, I would also need access to other properties in my store. 
+The last piece I wanted to do is keep a user logged in. As the user's info is held in the redux store and I am checking into the store to detect a user to authorize view of a page, the page will be inaccessible or will not load accurate if there is a refresh causing the store to disappear. I could use localStorage to hold a token with the user's information, however, the way my components are currently set up to pull information to display be accessing the store, I would also need access to other properties in my store. 
 
 To do this, I used Redux Persist and updated my index.js file accordingly.
+
+Future steps: Some ideas I want to implement in future versions of my project would be to display a calendar of days, rather than just created days. It would be visually appealing, as well as help with user experience in understanding which days contain data, etc.
+
+A walkthough of my project will be posted here at some point! Stay tuned!
 
