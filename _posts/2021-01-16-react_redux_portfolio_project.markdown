@@ -6,7 +6,7 @@ permalink:  react_redux_portfolio_project
 ---
 
 
-![https://www.google.com/url?sa=i&url=https%3A%2F%2Fidolforums.com%2Ftopic%2F741200-television-shows-rankdown%2F%3Fdo%3DfindComment%26comment%3D28309589&psig=AOvVaw3UysRPX9DBVChER2DFRPKu&ust=1606342466208000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKC8p5WanO0CFQAAAAAdAAAAABAO](https://www.google.com/url?sa=i&url=https%3A%2F%2Fidolforums.com%2Ftopic%2F741200-television-shows-rankdown%2F%3Fdo%3DfindComment%26comment%3D28309589&psig=AOvVaw3UysRPX9DBVChER2DFRPKu&ust=1606342466208000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKC8p5WanO0CFQAAAAAdAAAAABAO)
+![bebe](https://www.google.com/url?sa=i&url=https%3A%2F%2Fidolforums.com%2Ftopic%2F741200-television-shows-rankdown%2F%3Fdo%3DfindComment%26comment%3D28309589&psig=AOvVaw3UysRPX9DBVChER2DFRPKu&ust=1606342466208000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKC8p5WanO0CFQAAAAAdAAAAABAO)
 
 ## the plan
 During this pandemic, many people have become new parents -- whether of new plants, new pets, or little humans. My project will be a daily tracker for these new parents to record the growth and care of their new little ones.
@@ -228,11 +228,11 @@ Future steps/stretch goals:
 * I want to implement in future versions of my project would be to display a calendar of days, rather than just created days. It would be visually appealing, as well as help with user experience in understanding which days contain data, etc. 
 * I also want to be able to implement file uploads so users can upload pictures of their bebes directly.
 
-![](https://res.cloudinary.com/bphan/image/upload/v1610919651/Slide1_kwhdjs.jpg)
-![](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide2_eenlzp.jpg)
-![](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide3_reypsz.jpg)
-![](https://res.cloudinary.com/bphan/image/upload/v1610919651/Slide4_u2bqph.jpg)
-![](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide5_ocysxp.jpg)
+![index](https://res.cloudinary.com/bphan/image/upload/v1610919651/Slide1_kwhdjs.jpg)
+![app](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide2_eenlzp.jpg)
+![routes](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide3_reypsz.jpg)
+![bebescontainer](https://res.cloudinary.com/bphan/image/upload/v1610919651/Slide4_u2bqph.jpg)
+![abebecontainer](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide5_ocysxp.jpg)
 
 
 A walkthough of my project will be posted here at some point! Stay tuned!
