@@ -6,7 +6,7 @@ permalink:  react_redux_portfolio_project
 ---
 
 
-![bebe](https://www.google.com/url?sa=i&url=https%3A%2F%2Fidolforums.com%2Ftopic%2F741200-television-shows-rankdown%2F%3Fdo%3DfindComment%26comment%3D28309589&psig=AOvVaw3UysRPX9DBVChER2DFRPKu&ust=1606342466208000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKC8p5WanO0CFQAAAAAdAAAAABAO)
+![bebe](https://media.tenor.com/images/f24f34e1c1cf200df3c76111ef5972b0/tenor.gif)
 
 ## the plan
 During this pandemic, many people have become new parents -- whether of new plants, new pets, or little humans. My project will be a daily tracker for these new parents to record the growth and care of their new little ones.
