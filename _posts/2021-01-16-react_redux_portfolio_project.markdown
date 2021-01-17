@@ -172,9 +172,10 @@ create-react-app bebe-frontend
 Update attributes for each serializer & relationships
 
 
-> > src
->> App.js
->> index.js
+- src
+- - App.js
+- - index.js
+- 
 create & commit to github 
 change App.js into class component
 
