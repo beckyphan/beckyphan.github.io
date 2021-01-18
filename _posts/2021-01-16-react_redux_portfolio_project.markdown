@@ -283,6 +283,7 @@ To do this, I used Redux Persist and updated my index.js file accordingly.
 Future steps/stretch goals: 
 * I want to implement in future versions of my project would be to display a calendar of days, rather than just created days. It would be visually appealing, as well as help with user experience in understanding which days contain data, etc. 
 * I also want to be able to implement file uploads so users can upload pictures of their bebes directly.
+* I have additional attributes for my days model that I hope to flesh out --> in a calendar view, it'd be awesome to be able to show a picture of the day that is saved with that day instance displayed out
 
 ![index](https://res.cloudinary.com/bphan/image/upload/v1610919651/Slide1_kwhdjs.jpg)
 ![app](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide2_eenlzp.jpg)
@@ -291,5 +292,5 @@ Future steps/stretch goals:
 ![abebecontainer](https://res.cloudinary.com/bphan/image/upload/v1610919652/Slide5_ocysxp.jpg)
 
 
-A walkthough of my project will be posted here at some point! Stay tuned!
+And last but not least, my video walk-through is [here](http://https://res.cloudinary.com/bphan/video/upload/v1611001175/reactredux_bebesproject_mqq3ft.mp4)
 
