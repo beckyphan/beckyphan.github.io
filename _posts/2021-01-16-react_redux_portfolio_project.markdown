@@ -200,7 +200,7 @@ export function fetchBebes() {
 
 I chose to keep Trackings local rather than store than in the redux store because no other component will really need access to the trackings except for the day page that will display them, thus I kept it local within the state for that component.
 
-### rails backend
+### [rails backend](https://github.com/beckyphan/bebe-backend)
 rails new bebe-backend --api --database=postgresql --no-test-framework
 (consider namespacing controllers into api/v1 to help with versioning organization in backend and use postgres for db)
 I initially forgot to indicate the use of postgres upon creation, so had to go back and replace the db gem + update the database.yml file in the initializers/config folder.
@@ -220,7 +220,7 @@ To start, I will need to build out the user model and making sure a user can reg
 Then I should create the bebe model and ensure the relationships between a user and bebe are all working and that a logged-in user is able to create and view bebes.
 Next, I will build the days model, the trackings model, and then ensuring everything works.
 
-### react frontend
+### [react frontend](https://github.com/beckyphan/bebe-frontend)
 create-react-app bebe-frontend
 * add gem 'rack-cors' and configure cors.rb file within initializers folder to allow cross-origin resource sharing
 * add gem ‘active_model_serializer’ to be able to generate serializers via ‘rails g serializer’
